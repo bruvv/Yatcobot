@@ -12,4 +12,4 @@ requests==2.25.1
 six==1.16.0
 twitterapi==2.7.3
 urllib3==1.26.4
-websocket-client==1.0.0
+websocket-client==1.0.1
