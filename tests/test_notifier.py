@@ -9,7 +9,7 @@ class TestNotificationService(unittest.TestCase):
 
     @patch("yatcobot.plugins.notifiers.NotifierABC.__subclasses__")
     def test_initialize(self, __subclasses__):
-        subclasses = [MagicMock() for x in range(10)]
+        subclasses = [MagicMock() for _ in range(10)]
         for x in subclasses:
             x.is_enabled.return_value = random.choice([True, False])
 
@@ -22,10 +22,7 @@ class TestNotificationService(unittest.TestCase):
     def test_send_notification(self):
         n = NotificationService()
         # delete if some notifier is actualy loaded
-        n.active_notifiers = []
-        for i in range(10):
-            n.active_notifiers.append(MagicMock())
-
+        n.active_notifiers = [MagicMock() for _ in range(10)]
         n.send_notification('test', 'test')
 
         for x in n.active_notifiers:
@@ -40,7 +37,7 @@ class TestNotificationService(unittest.TestCase):
 
     @patch("yatcobot.plugins.notifiers.NotifierABC.__subclasses__")
     def test_is_enabled_enabled(self, __subclasses__):
-        subclasses = [MagicMock() for x in range(10)]
+        subclasses = [MagicMock() for _ in range(10)]
         for x in subclasses:
             x.is_enabled.return_value = random.choice([True, False])
 

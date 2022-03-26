@@ -87,8 +87,8 @@ class TestPeriodicScheduler(unittest.TestCase):
 
     def test_run(self):
 
-        targets = list()
-        for i in range(10):
+        targets = []
+        for _ in range(10):
             target = Mock(name='Test')
             target.__name__ = 'Test'
             targets.append(target)

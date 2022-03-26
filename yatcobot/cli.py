@@ -38,14 +38,15 @@ def main():
 
     # Test mail settings and exit
     if args.test_mail:
-        notifier = [x for x in NotifierABC.get_enabled() if isinstance(x, MailNotifier)]
-        if len(notifier) == 0:
-            logger.error('Mail is not enabled, please enable it in the config and try again')
-        else:
+        if notifier := [
+            x for x in NotifierABC.get_enabled() if isinstance(x, MailNotifier)
+        ]:
             notifier[0].test()
+        else:
+            logger.error('Mail is not enabled, please enable it in the config and try again')
         exit(1)
 
-    logger.info("Starting Yatcobot ({})".format(__version__))
+    logger.info(f"Starting Yatcobot ({__version__})")
     print_logo()
     bot = Yatcobot(args.ignore_list)
     bot.run()

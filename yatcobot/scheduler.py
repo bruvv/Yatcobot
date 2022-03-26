@@ -48,10 +48,13 @@ class PeriodicScheduler(sched.scheduler):
         task = self.tasks[index]
         if isinstance(task, NormalTask):
             super().enter(task.delay, task.priority, self.run_task, argument=(index,))
-            logger.debug("Rescheduling {} for after {} seconds".format(task.action.__name__, task.delay))
+            logger.debug(
+                f"Rescheduling {task.action.__name__} for after {task.delay} seconds"
+            )
+
         elif isinstance(task, RandomTask):
             delay = random.randint(task.delay - task.delay_margin, task.delay + task.delay_margin)
-            logger.debug("Rescheduling {} for after {} seconds".format(task.action.__name__, delay))
+            logger.debug(f"Rescheduling {task.action.__name__} for after {delay} seconds")
             super().enter(delay, task.priority, self.run_task, argument=(index,))
 
     def run_task(self, index):
@@ -61,8 +64,10 @@ class PeriodicScheduler(sched.scheduler):
         """
         self.enter_task(index)
         try:
-            logger.debug("Scheduler is calling: {}".format(self.tasks[index].action.__name__))
+            logger.debug(f"Scheduler is calling: {self.tasks[index].action.__name__}")
             self.tasks[index].action()
         except Exception as e:
-            logger.error("Exception in scheduled task :{}".format(self.tasks[index].action.__name__), exc_info=True)
-            pass
+            logger.error(
+                f"Exception in scheduled task :{self.tasks[index].action.__name__}",
+                exc_info=True,
+            )

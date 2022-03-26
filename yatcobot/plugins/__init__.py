@@ -28,10 +28,10 @@ class MergeAllSubclassesConfigsMixin:
 
     @classmethod
     def get_config_template(cls):
-        template = dict()
-        for subclass in cls.__subclasses__():
-            template[subclass.name] = subclass.get_config_template()
-        return template
+        return {
+            subclass.name: subclass.get_config_template()
+            for subclass in cls.__subclasses__()
+        }
 
 
 class GetEnabledSubclassesMixin:
@@ -44,8 +44,8 @@ class GetEnabledSubclassesMixin:
     @classmethod
     def get_enabled(cls, *args):
         """Retuns a list of instances of cls that are enabled"""
-        enabled = list()
-        for subclass in cls.__subclasses__():
-            if subclass.is_enabled():
-                enabled.append(subclass(*args))
-        return enabled
+        return [
+            subclass(*args)
+            for subclass in cls.__subclasses__()
+            if subclass.is_enabled()
+        ]

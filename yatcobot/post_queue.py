@@ -33,7 +33,10 @@ class PostQueue(OrderedDict):
 
         combined_rates = self.combine_rates(*(method.get_rating(self) for method in self.rating_methods))
 
-        sorted_rates = sorted((x for x in combined_rates.items()), key=lambda x: x[1], reverse=True)
+        sorted_rates = sorted(
+            iter(combined_rates.items()), key=lambda x: x[1], reverse=True
+        )
+
 
         # add a score value to every post
         for post in sorted_rates:

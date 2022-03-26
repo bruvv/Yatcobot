@@ -58,7 +58,7 @@ class Follow(ActionABC):
             logger.info('Unfollowed: {0}'.format(r['screen_name']))
 
     def follow(self, post):
-        users_followed = list()
+        users_followed = []
 
         # If multiple users is enabled follow all users mentioned
         if TwitterConfig.get().actions.follow.multiple:
@@ -78,13 +78,12 @@ class Follow(ActionABC):
 
     @staticmethod
     def get_config_template():
-        template = {
+        return {
             'enabled': confuse.TypeTemplate(bool),
             'keywords': confuse.StrSeq(),
             'max_following': confuse.Integer(),
             'multiple': confuse.TypeTemplate(bool)
         }
-        return template
 
 
 class Favorite(ActionABC):
@@ -107,11 +106,10 @@ class Favorite(ActionABC):
 
     @staticmethod
     def get_config_template():
-        template = {
+        return {
             'enabled': confuse.TypeTemplate(bool),
             'keywords': confuse.StrSeq()
         }
-        return template
 
 
 class TagFriend(ActionABC):
@@ -138,21 +136,24 @@ class TagFriend(ActionABC):
             number = self.get_friends_required(post)
             self.tag_friends(post, number)
         except ValueError:
-            logger.error('Error tagging friend for post {}. Please please open an issue with this message on github'
-                         .format(post['id']))
+            logger.error(
+                f"Error tagging friend for post {post['id']}. Please please open an issue with this message on github"
+            )
+
         except TagFriend.NotEnoughFriends:
-            logger.error('Not enough friends are defined for tagging on post: {}, {} are needed. Define more friends'
-                         .format(post['id'], number))
+            logger.error(
+                f"Not enough friends are defined for tagging on post: {post['id']}, {number} are needed. Define more friends"
+            )
 
     def tag_needed(self, post):
         text = preprocess_text(post['full_text'])
 
         tag_keywords = create_keyword_mutations(*TwitterConfig.get().actions.tag_friend.tag_keywords)
-        if not any(x in text for x in tag_keywords):
+        if all(x not in text for x in tag_keywords):
             return False
 
         friend_keywords = create_keyword_mutations(*TwitterConfig.get().actions.tag_friend.friend_keywords)
-        if not any(x in text for x in friend_keywords):
+        if all(x not in text for x in friend_keywords):
             return False
 
         return True
@@ -165,8 +166,14 @@ class TagFriend(ActionABC):
         friend_keywords = create_keyword_mutations(*TwitterConfig.get().actions.tag_friend.friend_keywords)
 
         # Find all occurrences of the keywords
-        tag_keywords_found = sorted(set(i for x in tag_keywords for i in self.find_all(x, text)))
-        friend_keywords_found = sorted(set(i for x in friend_keywords for i in self.find_all(x, text)))
+        tag_keywords_found = sorted(
+            {i for x in tag_keywords for i in self.find_all(x, text)}
+        )
+
+        friend_keywords_found = sorted(
+            {i for x in friend_keywords for i in self.find_all(x, text)}
+        )
+
 
         # Remove indexes of friend keyword that are before any tag keyword
         friend_keywords_found = [x for x in friend_keywords_found if x > min(tag_keywords_found)]
@@ -176,7 +183,7 @@ class TagFriend(ActionABC):
 
         # Find where the two keywords are closest
         closest_pair = [x for x in sorted(indexes, key=lambda x: x[1] - x[0]) if x[1] - x[0] > 0]
-        if len(closest_pair) == 0:
+        if not closest_pair:
             raise ValueError("Could not find substring")
 
         closest_pair = closest_pair[0]
@@ -211,7 +218,7 @@ class TagFriend(ActionABC):
         text = '@{}\n'.format(post['user']['screen_name'])
 
         for friend in friends[:number]:
-            text += '@{} '.format(friend)
+            text += f'@{friend} '
 
         logger.info('Responding to {} with text:{}'.format(post['id'], text.replace('\n', ' ')))
         self.client.update(text, post['id'])
@@ -231,11 +238,10 @@ class TagFriend(ActionABC):
     @staticmethod
     def get_config_template():
 
-        template = {
+        return {
             'enabled': confuse.TypeTemplate(bool),
             'friends': confuse.StrSeq(),
             'tag_keywords': confuse.StrSeq(),
             'friend_keywords': confuse.StrSeq(),
             'number_keywords': NumberKeywordsTemplate()
         }
-        return template

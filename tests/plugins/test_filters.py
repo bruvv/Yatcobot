@@ -87,7 +87,7 @@ class TestFilterKeywordsBlacklist(unittest.TestCase):
 
     def test_filter_keywords_empty(self):
         TwitterConfig.get()['search']['filter']['blacklist']['enabled'] = True
-        TwitterConfig.get()['search']['filter']['blacklist']['keywords'] = list()
+        TwitterConfig.get()['search']['filter']['blacklist']['keywords'] = []
 
         posts = {
             1: create_post(id=1, full_text='should be fine'),

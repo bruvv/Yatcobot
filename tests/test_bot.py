@@ -71,7 +71,7 @@ class TestBot(unittest.TestCase):
         self.assertEqual(r, post)
 
     def test_get_quoted_tweet_real_post(self):
-        with open(self.tests_path + '/fixtures/post_with_quote.json') as f:
+        with open(f'{self.tests_path}/fixtures/post_with_quote.json') as f:
             post = json.load(f)
         quoted_post_full = post.copy()
         quoted_post_full['user'] = {'id': 1}
@@ -97,8 +97,8 @@ class TestBot(unittest.TestCase):
         self.bot.post_queue.popitem.assert_called_with()
 
     def test_update_blocked_users(self):
-        users = [x for x in range(10)]
-        self.bot.ignore_list = list()
+        users = list(range(10))
+        self.bot.ignore_list = []
         self.bot.client.get_blocks.return_value = users
         self.bot.update_blocked_users()
         self.assertEqual(users, self.bot.ignore_list)
@@ -129,7 +129,7 @@ class TestBot(unittest.TestCase):
 
     def test_enter_contest_already_retweeted_found_from_failed_retweet(self):
         posts = 10
-        self.bot.ignore_list = list()
+        self.bot.ignore_list = []
         for i in range(posts):
             self.bot.post_queue[i] = {'id': i,
                                       'full_text': 'test', 'score': 0,
@@ -150,7 +150,7 @@ class TestBot(unittest.TestCase):
 
     def test_enter_contest_already_retweeted_found_from_getting_post(self):
         posts = 10
-        self.bot.ignore_list = list()
+        self.bot.ignore_list = []
         for i in range(posts):
             self.bot.post_queue[i] = {'id': i,
                                       'full_text': 'test', 'score': 0,
@@ -170,7 +170,7 @@ class TestBot(unittest.TestCase):
     def test_enter_contest_skip_already_retweeted(self):
         TwitterConfig.get()['search']['skip_retweeted'] = True
         posts = 10
-        self.bot.ignore_list = list()
+        self.bot.ignore_list = []
         for i in range(posts):
             self.bot.post_queue[i] = {'id': i,
                                       'full_text': 'test', 'score': 0,
@@ -187,12 +187,12 @@ class TestBot(unittest.TestCase):
         self.assertTrue(self.bot.client.retweet.called)
         self.bot.client.retweet.assert_called_with(9)
 
-        self.assertListEqual([x for x in range(10)], self.bot.ignore_list)
+        self.assertListEqual(list(range(10)), self.bot.ignore_list)
 
     def test_enter_contest_skip_already_retweeted_all_retweeted(self):
         TwitterConfig.get()['search']['skip_retweeted'] = True
         posts = 10
-        self.bot.ignore_list = list()
+        self.bot.ignore_list = []
         for i in range(posts):
             self.bot.post_queue[i] = {'id': i,
                                       'full_text': 'test', 'score': 0,
@@ -207,7 +207,7 @@ class TestBot(unittest.TestCase):
         self.assertEqual(len(self.bot.post_queue), 0)
         self.assertFalse(self.bot.client.retweet.called)
 
-        self.assertListEqual([x for x in range(10)], self.bot.ignore_list)
+        self.assertListEqual(list(range(10)), self.bot.ignore_list)
 
     def test_enter_contest_ignored_id(self):
         posts = 10
@@ -252,7 +252,7 @@ class TestBot(unittest.TestCase):
         self.assertNotIn(post['id'], self.bot.post_queue)
 
     def test_insert_post_to_queue_that_has_a_quote_thats_deleted(self):
-        with open(self.tests_path + '/fixtures/deleted_quote.json') as f:
+        with open(f'{self.tests_path}/fixtures/deleted_quote.json') as f:
             post = json.load(f)
 
         self.bot._insert_post_to_queue(post)
@@ -261,11 +261,17 @@ class TestBot(unittest.TestCase):
 
     def test_scan_new_contests(self):
         TwitterConfig.get()['search']['queries'] = ['test1']
-        posts = list()
-        for i in range(2):
-            posts.append({'id': i, 'full_text': 'test', 'retweet_count': 1,
-                          'user': {'id': random.randint(1, 1000), 'screen_name': 'test'}, 'retweeted': False,
-                          'created_at': 'Thu Oct 08 08:34:51 +0000 2015'})
+        posts = [
+            {
+                'id': i,
+                'full_text': 'test',
+                'retweet_count': 1,
+                'user': {'id': random.randint(1, 1000), 'screen_name': 'test'},
+                'retweeted': False,
+                'created_at': 'Thu Oct 08 08:34:51 +0000 2015',
+            }
+            for i in range(2)
+        ]
 
         self.bot.client = MagicMock()
         self.bot.client.search_tweets.return_value = posts
@@ -280,11 +286,17 @@ class TestBot(unittest.TestCase):
         TwitterConfig.get()['search']['queries'][0]['test1'] = None
         TwitterConfig.get()['search']['queries'][0]['lang'] = 'el'
 
-        posts = list()
-        for i in range(2):
-            posts.append({'id': i, 'full_text': 'test', 'retweet_count': 1,
-                          'user': {'id': random.randint(1, 1000), 'screen_name': 'test'}, 'retweeted': False,
-                          'created_at': 'Thu Oct 08 08:34:51 +0000 2015'})
+        posts = [
+            {
+                'id': i,
+                'full_text': 'test',
+                'retweet_count': 1,
+                'user': {'id': random.randint(1, 1000), 'screen_name': 'test'},
+                'retweeted': False,
+                'created_at': 'Thu Oct 08 08:34:51 +0000 2015',
+            }
+            for i in range(2)
+        ]
 
         self.bot.client = MagicMock()
         self.bot.client.search_tweets.return_value = posts

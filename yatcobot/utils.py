@@ -8,19 +8,24 @@ def create_keyword_mutations(*keywords):
         as base of the mutations
     :return: list of mutation
     """
-    mutations = list()
+    mutations = []
 
     for keyword in keywords:
         keyword = keyword.strip()
         keyword = keyword.lower()
-        mutations.append(' {} '.format(keyword))
-        mutations.append('#{} '.format(keyword))
-        mutations.append(',{} '.format(keyword))
-        mutations.append(' {},'.format(keyword))
-        mutations.append('.{} '.format(keyword))
-        mutations.append(' {}.'.format(keyword))
-        mutations.append(' {}!'.format(keyword))
-        mutations.append('!{} '.format(keyword))
+        mutations.extend(
+            (
+                f' {keyword} ',
+                f'#{keyword} ',
+                f',{keyword} ',
+                f' {keyword},',
+                f'.{keyword} ',
+                f' {keyword}.',
+                f' {keyword}!',
+                f'!{keyword} ',
+            )
+        )
+
     return mutations
 
 
@@ -28,7 +33,7 @@ def preprocess_text(text):
     text = text.replace('\n', ' ').replace('\r', '')
     text = text.lower()
     # Add space in both ends to make it easier to find words
-    text = ' {} '.format(text)
+    text = f' {text} '
     # Remove emoji
     # For more ranges see here https://www.unicode.org/emoji/charts/full-emoji-list.html
     emoji_pattern = re.compile("["
@@ -51,5 +56,5 @@ def count_keyword_in_text(keyword, text):
     :return: how many times the keyword is found
     """
     text.lower()
-    text = ' ' + text.lower() + ' '
+    text = f' {text.lower()} '
     return text.count(keyword)

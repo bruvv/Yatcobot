@@ -9,7 +9,12 @@ tests_path = path = os.path.dirname(os.path.abspath(__file__))
 
 
 def get_random_string(length=10):
-    return ''.join([random.choice(string.ascii_letters + string.digits) for n in range(length)])
+    return ''.join(
+        [
+            random.choice(string.ascii_letters + string.digits)
+            for _ in range(length)
+        ]
+    )
 
 
 def create_post(id=None, userid=None, retweets=None, favorites=None, user_followers=None,
@@ -32,7 +37,7 @@ def create_post(id=None, userid=None, retweets=None, favorites=None, user_follow
 
 
 def get_fixture(filename, raw=False):
-    with open(tests_path + '/fixtures/' + filename) as f:
+    with open(f'{tests_path}/fixtures/{filename}') as f:
         response = f.read()
     if raw:
         return response

@@ -28,11 +28,14 @@ class FilterMinRetweets(FilterABC):
         Removes all post that have less rewteets than min_retweets defined at config
         :param queue: Posts Queue
         """
-        ids_to_remove = list()
+        ids_to_remove = []
 
         for post_id, post in queue.items():
             if post['retweet_count'] < TwitterConfig.get().search.filter.min_retweets.number:
-                logger.info('Skipping {} because it has {} retweets'.format(post_id, post['retweet_count']))
+                logger.info(
+                    f"Skipping {post_id} because it has {post['retweet_count']} retweets"
+                )
+
                 ids_to_remove.append(post_id)
 
         for post_id in ids_to_remove:
@@ -44,11 +47,10 @@ class FilterMinRetweets(FilterABC):
 
     @staticmethod
     def get_config_template():
-        template = {
+        return {
             'enabled': confuse.TypeTemplate(bool),
             'number': confuse.Integer()
         }
-        return template
 
 
 class FilterBlacklist(FilterABC):
@@ -60,7 +62,7 @@ class FilterBlacklist(FilterABC):
         :param queue: Posts Queue
         """
 
-        ids_to_remove = list()
+        ids_to_remove = []
 
         for post_id, post in queue.items():
             # Filter by user
@@ -82,7 +84,7 @@ class FilterBlacklist(FilterABC):
 
         for keyword in keywords:
             if count_keyword_in_text(keyword, text) > 0:
-                logger.info('Skipping {} because it contains {} keyword'.format(post['id'], keyword))
+                logger.info(f"Skipping {post['id']} because it contains {keyword} keyword")
                 return True
         return False
 
@@ -90,7 +92,7 @@ class FilterBlacklist(FilterABC):
         user = post['user']['screen_name'].lower().strip()
         for blacklisted_user in TwitterConfig.get().search.filter.blacklist.users:
             if user == blacklisted_user.lower().strip():
-                logger.info('Skipping {} because user {} is blacklisted'.format(post['id'], user))
+                logger.info(f"Skipping {post['id']} because user {user} is blacklisted")
                 return True
         return False
 
@@ -103,9 +105,8 @@ class FilterBlacklist(FilterABC):
         # Fixme: minor hack because StrSeq doesnt support default
         strseq = confuse.StrSeq()
         strseq.default = []
-        template = {
+        return {
             'enabled': confuse.TypeTemplate(bool),
             'keywords': strseq,
             'users': strseq,
         }
-        return template

@@ -14,8 +14,8 @@ class TestPostQueue(unittest.TestCase):
         load_fixture_config()
 
     def test_sort_queue(self):
-        posts = dict()
-        for i in range(10):
+        posts = {}
+        for _ in range(10):
             post = create_post()
             posts[post['id']] = post
 
@@ -29,10 +29,8 @@ class TestPostQueue(unittest.TestCase):
 
     def test_sort_queue_len_1(self):
         """If less than 2, raises StatisticsError('variance requires at least two data points')"""
-        posts = dict()
         post = create_post()
-        posts[post['id']] = post
-
+        posts = {post['id']: post}
         queue = PostQueue(posts)
 
         queue.sort()
@@ -45,7 +43,7 @@ class TestPostQueue(unittest.TestCase):
         TwitterConfig.get()['search']['filter']['min_retweets']['enabled'] = True
         TwitterConfig.get()['search']['filter']['min_retweets']['number'] = 5
 
-        posts = dict()
+        posts = {}
         for i in range(10):
             post = create_post(retweets=i)
             posts[post['id']] = post

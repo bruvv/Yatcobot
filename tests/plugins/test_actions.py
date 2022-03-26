@@ -67,7 +67,10 @@ class TestFollow(unittest.TestCase):
             {'id': 0, 'full_text': 'test follow tests', 'user': {'id': random.randint(1, 1000), 'screen_name': 'test'},
              'retweeted': False})
 
-        follows = [x for x in range(TwitterConfig.get()['actions']['follow']['max_following'] + 1)]
+        follows = list(
+            range(TwitterConfig.get()['actions']['follow']['max_following'] + 1)
+        )
+
         self.client.get_friends_ids.return_value = follows
 
         self.action.process(post)
@@ -75,13 +78,19 @@ class TestFollow(unittest.TestCase):
         self.client.unfollow.assert_called_with(TwitterConfig.get()['actions']['follow']['max_following'])
 
     def test_remove_oldest_follow_empty(self):
-        follows = [x for x in range(TwitterConfig.get()['actions']['follow']['max_following'] - 1)]
+        follows = list(
+            range(TwitterConfig.get()['actions']['follow']['max_following'] - 1)
+        )
+
         self.client.get_friends_ids.return_value = follows
         self.action.remove_oldest_follow()
         self.assertFalse(self.client.unfollow.called)
 
     def test_remove_oldest_follow_full(self):
-        follows = [x for x in range(TwitterConfig.get()['actions']['follow']['max_following'] + 1)]
+        follows = list(
+            range(TwitterConfig.get()['actions']['follow']['max_following'] + 1)
+        )
+
         self.client.get_friends_ids.return_value = follows
         self.action.remove_oldest_follow()
         self.client.unfollow.assert_called_with(TwitterConfig.get()['actions']['follow']['max_following'])

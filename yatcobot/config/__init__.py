@@ -79,7 +79,7 @@ class Config:
         logger.info('Loading config files (From highest priority to lowest):')
         config.resolve()
         for i, config_source in enumerate(config.sources):
-            logger.info('{}: Path: {}'.format(i, config_source.filename))
+            logger.info(f'{i}: Path: {config_source.filename}')
 
         # Update template from plugins
         template = Config.get_template()

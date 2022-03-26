@@ -30,8 +30,8 @@ class TestRateByRetweetCount(unittest.TestCase):
     def test_get_retweets_rate(self):
         TwitterConfig.get()['search']['sort']['by_retweets_count']['enabled'] = True
 
-        posts = dict()
-        for i in range(10):
+        posts = {}
+        for _ in range(10):
             post = create_post()
             posts[post['id']] = post
 
