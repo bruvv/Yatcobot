@@ -57,7 +57,7 @@ class RateLimiter(dict):
         if constants.ENDPOINTS[endpoint][0] == 'POST':
             return
 
-        logger.debug('Checking limits for {}'.format(endpoint))
+        logger.debug(f'Checking limits for {endpoint}')
 
         endpoint_limits = self[self._get_internal_endpoint_name(endpoint)]
 
@@ -69,7 +69,10 @@ class RateLimiter(dict):
             wait = reset_time - now
 
             if wait > 0:
-                logger.warning('Rate limit {}. Waiting for {} seconds'.format(endpoint_limits['percent'], wait))
+                logger.warning(
+                    f"Rate limit {endpoint_limits['percent']}. Waiting for {wait} seconds"
+                )
+
                 time.sleep(wait)
                 raise RateLimiterExpired()
 
@@ -81,7 +84,10 @@ class RateLimiter(dict):
         endpoint = self._get_internal_endpoint_name(endpoint)
         if endpoint in self:
             self[endpoint]['remaining'] -= 1
-            logger.debug('Decreased remainin usages of {}. New value {}'.format(endpoint, self[endpoint]['remaining']))
+            logger.debug(
+                f"Decreased remainin usages of {endpoint}. New value {self[endpoint]['remaining']}"
+            )
+
             self._calculate_percent_remaining(endpoint)
 
     def _calculate_percent_remaining(self, endpoint):
@@ -99,7 +105,7 @@ class RateLimiter(dict):
         :param endpoint: the endpoint to convert
         :return: the internal endpoint
         '''
-        return '/' + endpoint
+        return f'/{endpoint}'
 
 
 class TwitterClient:
@@ -117,17 +123,16 @@ class TwitterClient:
         return r['statuses']
 
     def get_tweet(self, post_id):
-        return self._api_call('statuses/show/:{}'.format(post_id))
+        return self._api_call(f'statuses/show/:{post_id}')
 
     def update(self, status, reply_id=None):
-        data = dict()
-        data['status'] = status
+        data = {'status': status}
         if reply_id is not None:
             data['in_reply_to_status_id'] = reply_id
         return self._api_call('statuses/update', parameters=data)
 
     def retweet(self, post_id):
-        return self._api_call('statuses/retweet/:{}'.format(post_id))
+        return self._api_call(f'statuses/retweet/:{post_id}')
 
     def get_friends_ids(self):
         return self._api_call('friends/ids')['ids']
@@ -145,7 +150,7 @@ class TwitterClient:
         return self._api_call('blocks/ids')['ids']
 
     def get_mentions_timeline(self, count=None, since_id=None):
-        parameters = dict()
+        parameters = {}
         if count is not None:
             parameters['count'] = count
 
@@ -188,7 +193,10 @@ class TwitterClient:
         try:
             self._check_for_errors(response)
         except Exception as e:
-            logger.error('Error during twitter api call {} (parameters: {})'.format(request, parameters))
+            logger.error(
+                f'Error during twitter api call {request} (parameters: {parameters})'
+            )
+
             raise
 
         self.ratelimiter.decrease_remaining(endpoint)
@@ -203,5 +211,5 @@ class TwitterClient:
                 code = error['code']
                 if message == 'You have already retweeted this Tweet.':
                     raise TwitterClientRetweetedException()
-                logger.error('Twitter api error code:{} error:{}'.format(code, message))
+                logger.error(f'Twitter api error code:{code} error:{message}')
             raise TwitterClientException()

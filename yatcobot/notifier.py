@@ -18,6 +18,4 @@ class NotificationService:
     def is_enabled(self):
         """Checks if any notifier is enabled"""
 
-        if len(self.active_notifiers) > 0:
-            return True
-        return False
+        return len(self.active_notifiers) > 0

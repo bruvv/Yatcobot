@@ -18,6 +18,6 @@ client = TwitterClient(TwitterConfig.get().consumer_key,
 
 tweet = client.get_tweet(args.tweet_id)
 
-with open('{}.json'.format(args.tweet_id), 'w') as f:
+with open(f'{args.tweet_id}.json', 'w') as f:
     json.dump(tweet, f, indent=2)
 

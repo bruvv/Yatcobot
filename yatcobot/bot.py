@@ -36,7 +36,7 @@ class Yatcobot:
 
         logger.info("=== CHECKING RETWEET QUEUE ===")
 
-        logger.info("Queue length: {}".format(len(self.post_queue)))
+        logger.info(f"Queue length: {len(self.post_queue)}")
 
         while len(self.post_queue) > 0:
             post_id, post = self.post_queue.popitem(last=False)
@@ -54,19 +54,19 @@ class Yatcobot:
 
             # If skip enabled, get next post from queue
             if TwitterConfig.get().search.skip_retweeted:
-                logger.info('Skipping already retweeted post with id {}'.format(post_id))
+                logger.info(f'Skipping already retweeted post with id {post_id}')
                 continue
 
-            logger.error("Alredy retweeted tweet with id {}".format(post['id']))
+            logger.error(f"Alredy retweeted tweet with id {post['id']}")
             return
         else:
             logger.warning('Queue empty')
             return
 
         text = post['full_text'].replace('\n', '')
-        text = (text[:75] + '..') if len(text) > 75 else text
+        text = f'{text[:75]}..' if len(text) > 75 else text
         logger.info("Retweeting: {0} {1}".format(post['id'], text))
-        logger.debug("Tweet score: {}".format(post['score']))
+        logger.debug(f"Tweet score: {post['score']}")
 
         if post['user']['id'] in self.ignore_list:
             logger.info("Blocked user's tweet skipped")
@@ -77,7 +77,7 @@ class Yatcobot:
 
         except TwitterClientRetweetedException:
             self.ignore_list.append(post['id'])
-            logger.error("Alredy retweeted tweet with id {}".format(post['id']))
+            logger.error(f"Alredy retweeted tweet with id {post['id']}")
             return
 
         for action in self.actions:
@@ -89,17 +89,17 @@ class Yatcobot:
         to_delete = len(self.post_queue) - TwitterConfig.get().search.max_queue
 
         if to_delete > 0:
-            for i in range(to_delete):
+            for _ in range(to_delete):
                 # Remove from the end where the posts has lower score
                 self.post_queue.popitem()
 
-            logger.info("===THE QUEUE HAS BEEN CLEARED=== Deleted {} posts".format(to_delete))
+            logger.info(f"===THE QUEUE HAS BEEN CLEARED=== Deleted {to_delete} posts")
 
     def update_blocked_users(self):
         """Gets the blocked users and adds their ids in the ignore list"""
 
         for b in self.client.get_blocks():
-            if not b in self.ignore_list:
+            if b not in self.ignore_list:
                 self.ignore_list.append(b)
                 logger.info("Blocked user {0} added to ignore list".format(b))
 
@@ -118,9 +118,9 @@ class Yatcobot:
 
                 results = self.client.search_tweets(search_query, 50, language=lang)
             else:
-                raise ValueError("Uknown type of query {}".format(str(search_query)))
+                raise ValueError(f"Uknown type of query {str(search_query)}")
 
-            logger.info("Got {} new results for: {}".format(len(results), search_query))
+            logger.info(f"Got {len(results)} new results for: {search_query}")
 
             for post in results:
                 self._insert_post_to_queue(post)
@@ -152,7 +152,7 @@ class Yatcobot:
         posts = self.client.get_mentions_timeline(since_id=self.last_mention['id'])
         if len(posts) > 0:
             links = ' , '.join(self.create_tweet_link(x) for x in posts)
-            logger.info("You ve got {} new mentions: {}".format(len(posts), links))
+            logger.info(f"You ve got {len(posts)} new mentions: {links}")
             self.notification.send_notification('Yatcobot: Someone mentioned you, you may won something!',
                                                 '{} new mentions : \n {}'.format(len(posts), links))
 
@@ -179,7 +179,7 @@ class Yatcobot:
         :return: post: If itsnt retweet it returns the argument, otherwise returns original tweet
         """
         if 'retweeted_status' in post:
-            logger.debug('Tweet {} is a retweet'.format(post['id']))
+            logger.debug(f"Tweet {post['id']} is a retweet")
             return post['retweeted_status']
         return post
 
@@ -200,7 +200,10 @@ class Yatcobot:
             diff = difflib.SequenceMatcher(None, post['full_text'], quote['full_text']).ratio()
             # If the texts are similar continue
             if diff >= TwitterConfig.get().search.min_quote_similarity:
-                logger.debug('{} is a quote, following to next post. Depth from original post {}'.format(post['id'], i))
+                logger.debug(
+                    f"{post['id']} is a quote, following to next post. Depth from original post {i}"
+                )
+
                 quote = self.client.get_tweet(quote['id'])
                 # If its a quote of quote, get next quote and continue
                 post = quote
@@ -231,17 +234,21 @@ class Yatcobot:
 
         # Filter posts with deleted quote
         # We check if there is a key 'is_a_quote_status' that is true but there isn't a quoted_status
-        if 'is_quote_status' in post and post['is_quote_status'] and not 'quoted_status' in post:
+        if (
+            'is_quote_status' in post
+            and post['is_quote_status']
+            and 'quoted_status' not in post
+        ):
             return
 
         # Insert if it doenst already exists
         if post['id'] not in self.post_queue:
             self.post_queue[post['id']] = post
             text = post['full_text'].replace('\n', '')
-            text = (text[:75] + '..') if len(text) > 75 else text
+            text = f'{text[:75]}..' if len(text) > 75 else text
             logger.debug("Added tweet to queue: id:{0} username:{1} text:{2}".format(post['id'],
                                                                                      post['user']['screen_name'],
                                                                                      text))
 
     def create_tweet_link(self, post):
-        return "http://twitter.com/{}/status/{}".format(post['user']['screen_name'], post['id'])
+        return f"http://twitter.com/{post['user']['screen_name']}/status/{post['id']}"

@@ -33,17 +33,14 @@ class PushbulletNotifier(NotifierABC):
 
     @staticmethod
     def is_enabled():
-        if NotifiersConfig.get().pushbullet.enabled:
-            return True
-        return False
+        return bool(NotifiersConfig.get().pushbullet.enabled)
 
     @staticmethod
     def get_config_template():
-        template = {
+        return {
             'enabled': confuse.TypeTemplate(bool),
             'token': confuse.String()
         }
-        return template
 
 
 class MailNotifier(NotifierABC):
@@ -68,7 +65,7 @@ class MailNotifier(NotifierABC):
                 server.starttls()
             server.login(self.username, self.password)
             server.send_message(msg)
-            logger.info('Email Notifier: sent notification to {}'.format(self.recipient))
+            logger.info(f'Email Notifier: sent notification to {self.recipient}')
 
     def test(self):
         """
@@ -78,13 +75,11 @@ class MailNotifier(NotifierABC):
 
     @staticmethod
     def is_enabled():
-        if NotifiersConfig.get().mail.enabled:
-            return True
-        return False
+        return bool(NotifiersConfig.get().mail.enabled)
 
     @staticmethod
     def get_config_template():
-        template = {
+        return {
             'enabled': confuse.TypeTemplate(bool),
             'host': confuse.String(),
             'port': confuse.Integer(),
@@ -93,4 +88,3 @@ class MailNotifier(NotifierABC):
             'password': confuse.String(),
             'recipient': confuse.String()
         }
-        return template

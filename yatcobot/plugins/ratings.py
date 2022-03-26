@@ -31,16 +31,11 @@ class RatingABC(MergeAllSubclassesConfigsMixin, GetEnabledSubclassesMixin, Plugi
         m = mean(x.score for x in scores)
         s = stdev(x.score for x in scores)
 
-        normalized_scores = []
-
         # if standard deviation is 0 return 0 scores
         if s == 0:
             return [Score(x.id, 0) for x in scores]
 
-        for x in scores:
-            normalized_scores.append(Score(x.id, (x.score - m) / s))
-
-        return normalized_scores
+        return [Score(x.id, (x.score - m) / s) for x in scores]
 
 
 class RatingByKeywords(RatingABC):
@@ -65,9 +60,7 @@ class RatingByKeywords(RatingABC):
 
             rates.append(Score(post['id'], rate))
 
-        norm_scores = self.normalize_scores(rates)
-
-        return norm_scores
+        return self.normalize_scores(rates)
 
     @staticmethod
     def is_enabled():
@@ -75,11 +68,10 @@ class RatingByKeywords(RatingABC):
 
     @staticmethod
     def get_config_template():
-        template = {
+        return {
             'enabled': confuse.TypeTemplate(bool),
             'keywords': confuse.StrSeq()
         }
-        return template
 
 
 class RatingByRetweetsCount(RatingABC):
@@ -93,9 +85,7 @@ class RatingByRetweetsCount(RatingABC):
         """
         rates = [Score(post_id, post['retweet_count']) for post_id, post in queue.items()]
 
-        norm_rates = self.normalize_scores(rates)
-
-        return norm_rates
+        return self.normalize_scores(rates)
 
     @staticmethod
     def is_enabled():
@@ -103,10 +93,9 @@ class RatingByRetweetsCount(RatingABC):
 
     @staticmethod
     def get_config_template():
-        template = {
+        return {
             'enabled': confuse.TypeTemplate(bool),
         }
-        return template
 
 
 class RatingByAge(RatingABC):
@@ -130,7 +119,6 @@ class RatingByAge(RatingABC):
 
     @staticmethod
     def get_config_template():
-        template = {
+        return {
             'enabled': confuse.TypeTemplate(bool),
         }
-        return template
