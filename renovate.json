@@ -1,7 +1,7 @@
 {
-  "automerge": true,
-  "requiredStatusChecks": null,
-  "extends": [
-    "config:base"
-  ]
+  "extends": ["config:base"],
+  "automerge": false,
+  "assigneesFromCodeOwners": true,
+  "forkMode": true,
+  "includeForks": true
 }
