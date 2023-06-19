@@ -5,7 +5,7 @@ argh==0.28.1
 babel==2.12.1
 certifi==2018.11.29
 chardet==3.0.4
-commonmark==0.7.5
+commonmark==0.9.1
 coverage==4.5.4
 docutils==0.14
 freezegun==0.3.15
