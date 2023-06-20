@@ -23,7 +23,7 @@ pyparsing==2.4.7
 python-dateutil==2.7.2
 pytz==2018.9
 pyyaml==5.4
-requests-mock==1.4.0
+requests-mock==1.11.0
 requests==2.18.4
 six==1.11.0
 snowballstemmer==1.2.1
