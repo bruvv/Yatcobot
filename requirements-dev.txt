@@ -29,7 +29,7 @@ six==1.11.0
 snowballstemmer==1.9.1
 sphinx-autobuild==0.7.1
 sphinx-rtd-theme==0.2.4
-sphinx==1.7.2
+sphinx==1.8.6
 sphinxcontrib-websupport==1.0.1
 tornado==5.0.1
 urllib3==1.22
