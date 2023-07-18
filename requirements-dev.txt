@@ -31,7 +31,7 @@ sphinx-autobuild==2021.3.14
 sphinx-rtd-theme==1.2.2
 sphinx==7.0.1
 sphinxcontrib-websupport==1.2.4
-tornado==5.1.1
+tornado==6.3.2
 urllib3==1.26.16
 virtualenv-clone==0.5.7
 virtualenv==15.2.0
