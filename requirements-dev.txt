@@ -24,7 +24,7 @@ python-dateutil==2.7.2
 pytz==2023.3.post1
 pyyaml==6.0.1
 requests-mock==1.11.0
-requests==2.18.4
+requests==2.31.0
 six==1.11.0
 snowballstemmer==2.2.0
 sphinx-autobuild==2021.3.14
