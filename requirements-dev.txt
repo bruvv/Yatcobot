@@ -34,5 +34,5 @@ sphinxcontrib-websupport==1.2.7
 tornado==6.4
 urllib3==2.2.1
 virtualenv-clone==0.5.7
-virtualenv==20.26.0
+virtualenv==20.26.1
 watchdog==4.0.0
