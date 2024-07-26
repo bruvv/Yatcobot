@@ -1,6 +1,6 @@
 -e git+https://github.com/pypa/pipenv.git#egg=pipenv
 -e git+https://github.com/rtfd/recommonmark.git#egg=recommonmark
-alabaster==0.7.16
+alabaster==1.0.0
 argh==0.31.3
 babel==2.15.0
 certifi==2024.7.4
