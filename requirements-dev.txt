@@ -27,7 +27,7 @@ requests-mock==1.12.1
 requests==2.32.3
 six==1.11.0
 snowballstemmer==2.2.0
-sphinx-autobuild==2024.9.17
+sphinx-autobuild==2024.9.19
 sphinx-rtd-theme==2.0.0
 sphinx==8.0.2
 sphinxcontrib-websupport==2.0.0
