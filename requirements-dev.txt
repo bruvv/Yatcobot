@@ -28,7 +28,7 @@ requests==2.32.3
 six==1.11.0
 snowballstemmer==2.2.0
 sphinx-autobuild==2024.10.3
-sphinx-rtd-theme==3.0.0
+sphinx-rtd-theme==3.0.1
 sphinx==8.0.2
 sphinxcontrib-websupport==2.0.0
 tornado==6.4.1
