@@ -9,7 +9,7 @@ python-magic==0.4.27
 pyyaml==6.0.2
 requests-oauthlib==2.0.0
 requests==2.32.3
-six==1.16.0
+six==1.17.0
 twitterapi==2.8.2
 urllib3==2.2.3
 websocket-client==1.8.0
