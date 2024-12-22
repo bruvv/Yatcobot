@@ -11,5 +11,5 @@ requests-oauthlib==2.0.0
 requests==2.32.3
 six==1.17.0
 twitterapi==2.8.2
-urllib3==2.2.3
+urllib3==2.3.0
 websocket-client==1.8.0
