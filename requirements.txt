@@ -1,4 +1,4 @@
-certifi==2025.8.3
+certifi==2025.10.5
 chardet==5.2.0
 confuse==2.0.1
 idna==3.10
