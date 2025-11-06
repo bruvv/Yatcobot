@@ -7,7 +7,7 @@ certifi==2025.10.5
 chardet==5.2.0
 commonmark==0.9.1
 coverage==4.5.4
-docutils==0.22.2
+docutils==0.22.3
 freezegun==1.5.5
 future==1.0.0
 idna==3.11
