@@ -3,7 +3,7 @@
 alabaster==1.0.0
 argh==0.31.3
 babel==2.18.0
-certifi==2026.1.4
+certifi==2026.2.25
 chardet==6.0.0.post1
 commonmark==0.9.1
 coverage==4.5.4
