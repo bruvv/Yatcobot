@@ -1,5 +1,5 @@
 certifi==2026.2.25
-chardet==7.0.0
+chardet==7.0.1
 confuse==2.2.0
 idna==3.11
 oauthlib==3.3.1
