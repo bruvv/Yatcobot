@@ -18,7 +18,7 @@ markupsafe==3.0.3
 packaging==26.0
 pathtools==0.1.2
 port-for==1.0.0
-pygments==2.19.2
+pygments==2.20.0
 pyparsing==3.3.2
 python-dateutil==2.9.0.post0
 pytz==2026.1.post1
