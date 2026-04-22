@@ -1,4 +1,4 @@
-certifi==2026.2.25
+certifi==2026.4.22
 chardet==7.4.3
 confuse==2.2.0
 idna==3.12
