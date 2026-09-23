@@ -1,6 +1,6 @@
 certifi==2026.7.22
 chardet==7.6.0
-confuse==2.2.1
+confuse==2.3.0
 idna==3.20
 oauthlib==3.3.1
 pushbullet.py==0.12.0
