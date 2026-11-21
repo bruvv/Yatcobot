@@ -22,7 +22,7 @@ pygments==2.21.0
 pyparsing==3.3.3
 python-dateutil==3.0.0
 pytz==2026.6
-pyyaml==6.0.3
+pyyaml==6.0.4
 requests-mock==1.12.1
 requests==2.34.2
 six==1.17.0
