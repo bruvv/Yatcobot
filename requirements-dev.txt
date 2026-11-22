@@ -35,4 +35,4 @@ tornado==6.6.1
 urllib3==2.8.0
 virtualenv-clone==0.5.7
 virtualenv==21.15.12
-watchdog==7.0.0
+watchdog==7.1.1
